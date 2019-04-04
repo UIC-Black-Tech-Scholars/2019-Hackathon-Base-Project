@@ -3,6 +3,8 @@ package com.bts.lucasoskorep.hackathon_base_project;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,38 +14,51 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
+import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MAIN_ACTIVITY_TAG";
 
+    private static AppDatabase appDatabase;
+
+    @BindView(R.id.textView)
+    TextView textView;
+
+    @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+
+    @BindView(R.id.fab)
+    FloatingActionButton floatingActionButton;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+        setUpFabAndSideMenu();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        //Start with your onCreate code here!
+        exampleDatabaseQuery();
     }
 
+
+    /**
+     * Triggered whenever the back button is pressed.
+     */
     @Override
     public void onBackPressed() {
 
@@ -76,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -95,9 +111,92 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private void exampleDatabaseQuery(){
+        //database code here
+        appDatabase = AppDatabase.getAppDatabase(this);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                populateWithTestData(appDatabase);
+                for(User user: appDatabase.userDao().getAll()){
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getAge() + " : " +user.getUid());
+                    user.setAge(102);
+                    updateUser(appDatabase, user);
+                }
+
+                Log.i(TAG, "Done updating the users, printing out the update results.");
+                for(User user: appDatabase.userDao().getAll()){
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getAge() + " : " +user.getUid());
+                    deleteUser(appDatabase, user);
+                }
+                Log.i(TAG, "Removing all users from the database. ");
+                Log.i(TAG, "Attempting to print all users from teh database, there should be no more log messages after this. ");
+                for(User user: appDatabase.userDao().getAll()){
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getAge() + " : " +user.getUid());
+
+                }
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+    public void setUpFabAndSideMenu(){
+
+        setSupportActionBar(toolbar);
+        //Creates the floating action button
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        //Creates the side drawer incase you want to use that.
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    private static User updateUser(AppDatabase db, User user){
+        db.userDao().updateUsers(user);
+        return user;
+    }
+
+    private static void deleteUser(AppDatabase db, User user){
+        db.userDao().delete(user);
+    }
+
+    private static User addUser(final AppDatabase db, User user) {
+        db.userDao().insertAll(user);
+        return user;
+    }
+
+    private static void populateWithTestData(AppDatabase db) {
+        User user = new User();
+        user.setFirstName("Lucas");
+        user.setLastName("Oskorep");
+        user.setAge(22);
+        addUser(db, user);
+        user = new User();
+        user.setFirstName("Carmen");
+        user.setLastName("Bertucci");
+        user.setAge(25);
+        addUser(db, user);
+        user = new User();
+        user.setFirstName("Student");
+        user.setLastName("McStudentFace");
+        user.setAge(21);
+        addUser(db, user);
     }
 }
