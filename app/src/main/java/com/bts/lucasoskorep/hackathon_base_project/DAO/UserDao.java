@@ -13,13 +13,13 @@ import java.util.List;
 @Dao
 public interface UserDao {
 
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM user_table")
     List<User> getAll();
 
-    @Query("SELECT * FROM user where first_name LIKE  :firstName AND last_name LIKE :lastName")
+    @Query("SELECT * FROM user_table where first_name LIKE  :firstName AND last_name LIKE :lastName")
     User findByName(String firstName, String lastName);
 
-    @Query("SELECT COUNT(*) from user")
+    @Query("SELECT COUNT(*) from user_table")
     int countUsers();
 
     @Update
