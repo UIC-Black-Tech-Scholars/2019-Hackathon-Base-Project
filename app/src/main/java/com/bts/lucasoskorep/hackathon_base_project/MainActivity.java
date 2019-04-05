@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity
                     deleteUser(appDatabase, user);
                 }
                 Log.i(TAG, "Removing all users from the database. ");
-                Log.i(TAG, "Attempting to print all users from teh database, there should be no more log messages after this. ");
+                Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
                 for(User user: appDatabase.userDao().getAll()){
                     Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " +user.getUid());
 
