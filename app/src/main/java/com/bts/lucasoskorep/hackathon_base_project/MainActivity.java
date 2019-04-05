@@ -124,20 +124,19 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 populateWithTestData(appDatabase);
                 for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getAge() + " : " +user.getUid());
-                    user.setAge(102);
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : "  +user.getUid());
                     updateUser(appDatabase, user);
                 }
 
                 Log.i(TAG, "Done updating the users, printing out the update results.");
                 for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getAge() + " : " +user.getUid());
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + +user.getUid());
                     deleteUser(appDatabase, user);
                 }
                 Log.i(TAG, "Removing all users from the database. ");
                 Log.i(TAG, "Attempting to print all users from teh database, there should be no more log messages after this. ");
                 for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getAge() + " : " +user.getUid());
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " +user.getUid());
 
                 }
             }
@@ -186,17 +185,14 @@ public class MainActivity extends AppCompatActivity
         User user = new User();
         user.setFirstName("Lucas");
         user.setLastName("Oskorep");
-        user.setAge(22);
         addUser(db, user);
         user = new User();
         user.setFirstName("Carmen");
         user.setLastName("Bertucci");
-        user.setAge(25);
         addUser(db, user);
         user = new User();
         user.setFirstName("Student");
         user.setLastName("McStudentFace");
-        user.setAge(21);
         addUser(db, user);
     }
 }
