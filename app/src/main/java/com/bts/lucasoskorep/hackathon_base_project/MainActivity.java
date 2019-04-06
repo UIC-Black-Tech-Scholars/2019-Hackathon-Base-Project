@@ -1,9 +1,14 @@
 package com.bts.lucasoskorep.hackathon_base_project;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.TextViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -14,10 +19,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
+import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +37,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MAIN_ACTIVITY_TAG";
+
+    private static final int CAMERA_CODE = 1;
 
     private static AppDatabase appDatabase;
 
@@ -44,6 +57,12 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+//    Button button;
+//
+//    ImageView cameraImage;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +70,41 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setUpFabAndSideMenu();
 
+//        button = findViewById(R.id.graphButton);
+//        cameraImage = findViewById(R.id.cameraImage);
+//
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(intent, CAMERA_CODE);
+//            }
+//        });
+
         //Start with your onCreate code here!
-        exampleDatabaseQuery();
+        exampleDatabaseQueryCategory();
+
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+//        if (requestCode == CAMERA_CODE  && resultCode  == RESULT_OK) {
+//            Uri selectedImage = data.getData();
+//            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//
+//            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+//            cursor.moveToFirst();
+//
+//            //yourSelectedImage = BitmapFactory.decodeFile(filePath);
+//
+//            Toast.makeText(this, "SAve img", Toast.LENGTH_LONG).show();
+//
+//        }
+
+    }
 
     /**
      * Triggered whenever the back button is pressed.
@@ -116,27 +166,55 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void exampleDatabaseQuery(){
+//    private void exampleDatabaseQuery(){
+//        //database code here
+//        appDatabase = AppDatabase.getAppDatabase(this);
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                populateWithTestData(appDatabase);
+//                for(User user: appDatabase.userDao().getAll()){
+//                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : "  +user.getUid());
+//                    updateUser(appDatabase, user);
+//                }
+//
+//                Log.i(TAG, "Done updating the users, printing out the update results.");
+//                for(User user: appDatabase.userDao().getAll()){
+//                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + +user.getUid());
+//                    deleteUser(appDatabase, user);
+//                }
+//                Log.i(TAG, "Removing all users from the database. ");
+//                Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
+//                for(User user: appDatabase.userDao().getAll()){
+//                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " +user.getUid());
+//
+//                }
+//            }
+//        };
+//        new Thread(runnable).start();
+//    }
+
+    private void exampleDatabaseQueryCategory(){
         //database code here
         appDatabase = AppDatabase.getAppDatabase(this);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                populateWithTestData(appDatabase);
-                for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : "  +user.getUid());
-                    updateUser(appDatabase, user);
+                populateWithTestDataCategory(  appDatabase);
+                for(Category category : appDatabase.categoryDao().getAll()){
+                    Log.i(TAG, category.getName() + " " + category.getTransactionType() + " : "  + category.getUid());
+                    updateCategory(appDatabase, category );
                 }
 
                 Log.i(TAG, "Done updating the users, printing out the update results.");
-                for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + +user.getUid());
-                    deleteUser(appDatabase, user);
+                for(Category category: appDatabase.categoryDao().getAll()){
+                    Log.i(TAG, category.getName() + " " + category.getTransactionType() + " : " + category.getUid());
+                    deleteCategory(appDatabase, category);
                 }
                 Log.i(TAG, "Removing all users from the database. ");
                 Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
-                for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " +user.getUid());
+                for(Category category: appDatabase.categoryDao().getAll()){
+                    Log.i(TAG, category.getName() + " " + category.getTransactionType() + " : " +category.getUid());
 
                 }
             }
@@ -172,8 +250,17 @@ public class MainActivity extends AppCompatActivity
         return user;
     }
 
+    private static Category updateCategory(AppDatabase db, Category category){
+        db.categoryDao().updateCategory(category);
+        return category;
+    }
+
     private static void deleteUser(AppDatabase db, User user){
         db.userDao().delete(user);
+    }
+
+    private static void deleteCategory(AppDatabase db, Category category){
+        db.categoryDao().delete(category);
     }
 
     private static User addUser(final AppDatabase db, User user) {
@@ -181,18 +268,47 @@ public class MainActivity extends AppCompatActivity
         return user;
     }
 
-    private static void populateWithTestData(AppDatabase db) {
-        User user = new User();
-        user.setFirstName("Lucas");
-        user.setLastName("Oskorep");
-        addUser(db, user);
-        user = new User();
-        user.setFirstName("Carmen");
-        user.setLastName("Bertucci");
-        addUser(db, user);
-        user = new User();
-        user.setFirstName("Student");
-        user.setLastName("McStudentFace");
-        addUser(db, user);
+    private static Category addCategory(final  AppDatabase db, Category category){
+        db.categoryDao().insertAll(category);
+        return category;
+    }
+
+//    private static void populateWithTestData(AppDatabase db) {
+//        User user = new User();
+//        user.setFirstName("Lucas");
+//        user.setLastName("Oskorep");
+//        addUser(db, user);
+
+//        user = new User();
+//        user.setFirstName("Carmen");
+//        user.setLastName("Bertucci");
+//        addUser(db, user);
+
+//        user = new User();
+//        user.setFirstName("Student");
+//        user.setLastName("McStudentFace");
+//        addUser(db, user);
+//    }
+
+    private static void populateWithTestDataCategory(AppDatabase db) {
+        Category category = new Category();
+        category.setName("Housing");
+        category.setTransactionType("negative");
+        addCategory(db, category);
+
+        category = new Category();
+        category.setName("income");
+        category.setTransactionType("positive");
+        addCategory(db, category);
+
+        category = new Category();
+        category.setName("Food");
+        category.setTransactionType("negative");
+        addCategory(db, category);
+
+        category = new Category();
+        category.setName("transportation");
+        category.setTransactionType("negative");
+        addCategory(db, category);
     }
 }
