@@ -14,6 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
@@ -25,12 +29,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
     private static final String TAG = "MAIN_ACTIVITY_TAG";
 
     private static AppDatabase appDatabase;
 
-    @BindView(R.id.textView)
-    TextView textView;
+//    @BindView(R.id.textView)
+//    TextView textView;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -44,6 +49,27 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.button2)
+    Button submitbutton;
+
+    @BindView(R.id.editText7)
+    EditText amount;
+
+    @BindView(R.id.spinner5)
+    Spinner month;
+
+    @BindView(R.id.spinner6)
+    Spinner day;
+
+    @BindView(R.id.spinner8)
+    Spinner year;
+
+    @BindView(R.id.spinner4)
+    Spinner category;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +79,11 @@ public class MainActivity extends AppCompatActivity
 
         //Start with your onCreate code here!
         exampleDatabaseQuery();
+
+        setUpSpinners();
+
+        Transactions(); //get transaction info
+
     }
 
 
@@ -116,27 +147,27 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void exampleDatabaseQuery(){
+    private void exampleDatabaseQuery() {
         //database code here
         appDatabase = AppDatabase.getAppDatabase(this);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 populateWithTestData(appDatabase);
-                for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : "  +user.getUid());
+                for (User user : appDatabase.userDao().getAll()) {
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getUid());
                     updateUser(appDatabase, user);
                 }
 
                 Log.i(TAG, "Done updating the users, printing out the update results.");
-                for(User user: appDatabase.userDao().getAll()){
+                for (User user : appDatabase.userDao().getAll()) {
                     Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + +user.getUid());
                     deleteUser(appDatabase, user);
                 }
                 Log.i(TAG, "Removing all users from the database. ");
                 Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
-                for(User user: appDatabase.userDao().getAll()){
-                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " +user.getUid());
+                for (User user : appDatabase.userDao().getAll()) {
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getUid());
 
                 }
             }
@@ -144,7 +175,7 @@ public class MainActivity extends AppCompatActivity
         new Thread(runnable).start();
     }
 
-    public void setUpFabAndSideMenu(){
+    public void setUpFabAndSideMenu() {
 
         setSupportActionBar(toolbar);
         //Creates the floating action button
@@ -167,12 +198,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private static User updateUser(AppDatabase db, User user){
+    private static User updateUser(AppDatabase db, User user) {
         db.userDao().updateUsers(user);
         return user;
     }
 
-    private static void deleteUser(AppDatabase db, User user){
+    private static void deleteUser(AppDatabase db, User user) {
         db.userDao().delete(user);
     }
 
@@ -194,5 +225,57 @@ public class MainActivity extends AppCompatActivity
         user.setFirstName("Student");
         user.setLastName("McStudentFace");
         addUser(db, user);
+    }
+
+    public void Transactions() {
+        submitbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int amountnum = Integer.parseInt(amount.getText().toString());
+                //int daynum = (int) day.getSelectedItem();
+                //int monthnum = (int) month.getSelectedItem();
+               // int yearnum = (int) year.getSelectedItem();
+               // String categoryval = String.valueOf(category.getSelectedItem());
+               // System.out.println("Amount num: " + amountnum);
+            }
+        });
+
+    }
+
+    public void setUpSpinners(){
+        String[] spinnermonth = new String[]{
+                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnermonth);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        month.setAdapter(adapter);
+
+        String[] spinnerday = new String[]{
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18",
+                "19", "20", "21", "22", "23", "24","25", "26", "27", "28", "29", "30", "31"
+        };
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnerday);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        day.setAdapter(adapter2);
+
+        String[] spinneryear= new String[]{
+                "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010"
+        };
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinneryear);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        year.setAdapter(adapter3);
+
+        String[] spinnercategory= new String[]{
+                "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation"
+        };
+        ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnercategory);
+        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        category.setAdapter(adapter4);
+
     }
 }
