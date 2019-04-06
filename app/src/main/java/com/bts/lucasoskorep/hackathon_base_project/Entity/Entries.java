@@ -14,7 +14,22 @@ public class Entries {
     private String nameTitle;
 
     @ColumnInfo(name = "Category")
-    private int catPrimaryKey;
+    public int uid;
+
+    @ColumnInfo(name = "Amount")
+    public int amount;
+
+    @ColumnInfo (name = "Date")
+    public int date;
+
+    @ColumnInfo (name = "Notes")
+    public String notes;
+
+//    @ColumnInfo (name = "Images")
+//    public
+
+    @ColumnInfo(name = "Category")
+    public int catPrimaryKey;
 
     public int getTransPrimaryKey() {
         return transPrimaryKey;

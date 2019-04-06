@@ -75,8 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         //Start with your onCreate code here!
         exampleDatabaseQueryCategory();
-
-        exampleDatabaseQuery2();
+        exampleDatabaseQueryEntries();
 
     }
 
@@ -218,7 +217,7 @@ public class MainActivity extends AppCompatActivity
 
 // Method of the EntriesData
 
-    private void exampleDatabaseQuery2(){
+    private void exampleDatabaseQueryEntries(){
         //database code here
         appDatabase = AppDatabase.getAppDatabase(this);
         Runnable runnable = new Runnable() {
@@ -335,6 +334,11 @@ public class MainActivity extends AppCompatActivity
         category.setName("transportation");
         category.setTransactionType("negative");
         addCategory(db, category);
+    }
+
+    private static void populateWithTestDataEntries(AppDatabase db) {
+        Entries entry = new Entries();
+        entry.setNameTitle("trip to jewel osco");
     }
 
     private static Entries addEntry(final AppDatabase db, Entries entry) {
