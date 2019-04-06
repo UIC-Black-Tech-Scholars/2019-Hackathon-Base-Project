@@ -9,6 +9,11 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="New Entry" />
         <item
+            android:id="@+id/show_transactionsList"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Transaction List" />
+
+        <item
             android:id="@+id/show_statements"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Statements" />
@@ -22,10 +27,7 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Bar Graph" />
 
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Transaction List" />
+
     </group>
 
     <item android:title="Communicate">
