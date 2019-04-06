@@ -25,6 +25,15 @@ public class Entries {
     @ColumnInfo (name = "Date")
     public String date;
 
+    @ColumnInfo (name = "Month")
+    public int month;
+
+    @ColumnInfo (name = "Year")
+    public int year;
+
+    @ColumnInfo (name = "Day")
+    public int day;
+
     @ColumnInfo (name = "Notes")
     public String notes;
 
@@ -37,6 +46,10 @@ public class Entries {
        // this.uid = cat;
        // this.amount = amount;
         this.imagePath = path;
+        this.year = year;
+        this.day = day;
+        this.month = month;
+        this.uid = cat;
         this.date = month + "/" +day+ "/" + year;
         this.ID = id;
         this.amount = amount;
@@ -74,4 +87,22 @@ public class Entries {
     }
 
     public String getImage() { return imagePath; }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+
+
+    public String getUid() {
+        return uid;
+    }
 }

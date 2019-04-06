@@ -258,9 +258,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.show_barGraph) {
             //Create new activity here
-//            Intent intent = new Intent(MainActivity.this, GraphActivity.class);
+//            Intent intent = new Intent(MainActivity.this, SecondaryActivity.class);
 //            startActivity(intent);
-
         }
 
         else if (id == R.id.show_pieChart) {
@@ -487,7 +486,7 @@ public class MainActivity extends AppCompatActivity
         year.setAdapter(adapter3);
 
         String[] spinnercategory = new String[]{
-                "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation", "Other"
+                "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation"
         };
         ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spinnercategory);
