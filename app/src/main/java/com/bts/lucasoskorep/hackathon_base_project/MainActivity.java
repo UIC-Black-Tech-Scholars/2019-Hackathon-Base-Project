@@ -1,5 +1,11 @@
 package com.bts.lucasoskorep.hackathon_base_project;
 
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
+import android.view.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +20,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,14 +42,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MAIN_ACTIVITY_TAG";
 
-    private static final int CAMERA_CODE = 1;
+    private static final String TAG = "MAIN_ACTIVITY_TAG";
 
     private static AppDatabase appDatabase;
 
-    @BindView(R.id.textView)
-    TextView textView;
+//    @BindView(R.id.textView)
+//    TextView textView;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -49,9 +62,28 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-//    Button button;
-//
-//    ImageView cameraImage;
+    @BindView(R.id.button2)
+    Button submitbutton;
+
+    @BindView(R.id.editText7)
+    EditText amount;
+
+    @BindView(R.id.spinner5)
+    Spinner month;
+
+    @BindView(R.id.spinner6)
+    Spinner day;
+
+    @BindView(R.id.spinner8)
+    Spinner year;
+
+    @BindView(R.id.spinner4)
+    Spinner category;
+
+    @BindView(R.id.editText5){
+        EditText comments;
+    }
+
 
 
 
@@ -62,42 +94,20 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setUpFabAndSideMenu();
 
-//        button = findViewById(R.id.graphButton);
-//        cameraImage = findViewById(R.id.cameraImage);
-//
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(intent, CAMERA_CODE);
-//            }
-//        });
-
         //Start with your onCreate code here!
+        exampleDatabaseQuery();
+
         exampleDatabaseQueryCategory();
         exampleDatabaseQueryEntries();
 
-    }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        setUpSpinners();
 
-//        if (requestCode == CAMERA_CODE  && resultCode  == RESULT_OK) {
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//
-//            //yourSelectedImage = BitmapFactory.decodeFile(filePath);
-//
-//            Toast.makeText(this, "SAve img", Toast.LENGTH_LONG).show();
-//
-//        }
+        Transactions(); //get transaction info
 
     }
+
 
     /**
      * Triggered whenever the back button is pressed.
@@ -159,33 +169,33 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-//    private void exampleDatabaseQuery(){
-//        //database code here
-//        appDatabase = AppDatabase.getAppDatabase(this);
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                populateWithTestData(appDatabase);
-//                for(User user: appDatabase.userDao().getAll()){
-//                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : "  +user.getUid());
-//                    updateUser(appDatabase, user);
-//                }
-//
-//                Log.i(TAG, "Done updating the users, printing out the update results.");
-//                for(User user: appDatabase.userDao().getAll()){
-//                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + +user.getUid());
-//                    deleteUser(appDatabase, user);
-//                }
-//                Log.i(TAG, "Removing all users from the database. ");
-//                Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
-//                for(User user: appDatabase.userDao().getAll()){
-//                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " +user.getUid());
-//
-//                }
-//            }
-//        };
-//        new Thread(runnable).start();
-//    }
+    private void exampleDatabaseQuery() {
+        //database code here
+        appDatabase = AppDatabase.getAppDatabase(this);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                populateWithTestData(appDatabase);
+                for (User user : appDatabase.userDao().getAll()) {
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getUid());
+                    updateUser(appDatabase, user);
+                }
+
+                Log.i(TAG, "Done updating the users, printing out the update results.");
+                for (User user : appDatabase.userDao().getAll()) {
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + +user.getUid());
+                    deleteUser(appDatabase, user);
+                }
+                Log.i(TAG, "Removing all users from the database. ");
+                Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
+                for (User user : appDatabase.userDao().getAll()) {
+                    Log.i(TAG, user.getFirstName() + " " + user.getLastName() + " : " + user.getUid());
+
+                }
+            }
+        };
+        new Thread(runnable).start();
+    }
 
     private void exampleDatabaseQueryCategory(){
         //database code here
@@ -214,6 +224,7 @@ public class MainActivity extends AppCompatActivity
         };
         new Thread(runnable).start();
     }
+
 
 // Method of the EntriesData
 
@@ -248,6 +259,7 @@ public class MainActivity extends AppCompatActivity
 
     public void setUpFabAndSideMenu(){
 
+
         setSupportActionBar(toolbar);
         //Creates the floating action button
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -269,17 +281,19 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private static User updateUser(AppDatabase db, User user){
+    private static User updateUser(AppDatabase db, User user) {
         db.userDao().updateUsers(user);
         return user;
     }
+
 
     private static Category updateCategory(AppDatabase db, Category category){
         db.categoryDao().updateCategory(category);
         return category;
     }
 
-    private static void deleteUser(AppDatabase db, User user){
+
+    private static void deleteUser(AppDatabase db, User user) {
         db.userDao().delete(user);
     }
 
@@ -287,16 +301,68 @@ public class MainActivity extends AppCompatActivity
         db.categoryDao().delete(category);
     }
 
+
     private static User addUser(final AppDatabase db, User user) {
         db.userDao().insertAll(user);
         return user;
     }
 
-    private static Category addCategory(final  AppDatabase db, Category category){
+    private static Category addCategory(final AppDatabase db, Category category){
         db.categoryDao().insertAll(category);
         return category;
     }
 
+    public void Transactions() {
+        submitbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int amountnum = Integer.parseInt(amount.getText().toString());
+                int daynum = (int) day.getSelectedItem();
+                int monthnum = (int) month.getSelectedItem();
+                int yearnum = (int) year.getSelectedItem();
+                String categoryval = String.valueOf(category.getSelectedItem());
+              //  String commentsval = String.valueOf(comments.getText().toString);
+            }
+        });
+
+    }
+
+    public void setUpSpinners() {
+        String[] spinnermonth = new String[]{
+                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnermonth);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        month.setAdapter(adapter);
+
+        String[] spinnerday = new String[]{
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18",
+                "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
+        };
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnerday);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        day.setAdapter(adapter2);
+
+        String[] spinneryear = new String[]{
+                "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010"
+        };
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinneryear);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        year.setAdapter(adapter3);
+
+        String[] spinnercategory = new String[]{
+                "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation"
+        };
+        ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnercategory);
+        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        category.setAdapter(adapter4);
+
+    }
     private static void populateWithTestData(AppDatabase db) {
         User user = new User();
         user.setFirstName("Lucas");
@@ -314,6 +380,8 @@ public class MainActivity extends AppCompatActivity
         user.setLastName("McStudentFace");
         addUser(db, user);
     }
+
+
     private static void populateWithTestDataCategory(AppDatabase db) {
         Category category = new Category();
         category.setName("Housing");
