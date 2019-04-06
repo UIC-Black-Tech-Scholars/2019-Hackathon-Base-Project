@@ -285,8 +285,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.show_barGraph) {
             //Create new activity here
-//            Intent intent = new Intent(MainActivity.this, SecondaryActivity.class);
+//            Intent intent = new Intent(MainActivity.this, GraphActivity.class);
 //            startActivity(intent);
+
         }
 
         else if (id == R.id.show_pieChart) {
