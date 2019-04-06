@@ -14,10 +14,6 @@
             android:title="Transaction List" />
 
         <item
-            android:id="@+id/show_statements"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Statements" />
-        <item
             android:id="@+id/show_pieChart"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Pie Chart" />
