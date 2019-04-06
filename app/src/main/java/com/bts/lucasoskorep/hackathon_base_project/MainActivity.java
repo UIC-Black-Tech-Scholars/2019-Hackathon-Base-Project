@@ -6,12 +6,18 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.TextViewCompat;
 import android.util.Log;
 import android.view.View;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -21,6 +27,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
+
+import android.view.View;
+import android.widget.TextView;
+
+import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
+import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
+import com.bts.lucasoskorep.hackathon_base_project.Entity.Entries;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
 
 import butterknife.BindView;
@@ -79,6 +92,12 @@ public class MainActivity extends AppCompatActivity
 
         //Start with your onCreate code here!
         exampleDatabaseQuery();
+
+        exampleDatabaseQueryCategory();
+
+        exampleDatabaseQuery2();
+
+
 
         setUpSpinners();
 
@@ -175,7 +194,68 @@ public class MainActivity extends AppCompatActivity
         new Thread(runnable).start();
     }
 
-    public void setUpFabAndSideMenu() {
+    private void exampleDatabaseQueryCategory(){
+        //database code here
+        appDatabase = AppDatabase.getAppDatabase(this);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                populateWithTestDataCategory(  appDatabase);
+                for(Category category : appDatabase.categoryDao().getAll()){
+                    Log.i(TAG, category.getName() + " " + category.getTransactionType() + " : "  + category.getUid());
+                    updateCategory(appDatabase, category );
+                }
+
+                Log.i(TAG, "Done updating the users, printing out the update results.");
+                for(Category category: appDatabase.categoryDao().getAll()){
+                    Log.i(TAG, category.getName() + " " + category.getTransactionType() + " : " + category.getUid());
+                    deleteCategory(appDatabase, category);
+                }
+                Log.i(TAG, "Removing all users from the database. ");
+                Log.i(TAG, "Attempting to print all users from the database. There should be no more log messages after this. ");
+                for(Category category: appDatabase.categoryDao().getAll()){
+                    Log.i(TAG, category.getName() + " " + category.getTransactionType() + " : " +category.getUid());
+
+                }
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+
+// Method of the EntriesData
+
+    private void exampleDatabaseQuery2(){
+        //database code here
+        appDatabase = AppDatabase.getAppDatabase(this);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                populateWithTestData(appDatabase);
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
+                    updateEntry(appDatabase, entry);
+                }
+
+                Log.i(TAG, "Done updating the entries, printing out the update results.");
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
+                    deleteEntry(appDatabase, entry);
+                }
+                Log.i(TAG, "Removing all entries from the database. ");
+                Log.i(TAG, "Attempting to print all entries from the database. There should be no more log messages after this. ");
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle());
+
+                }
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+
+    public void setUpFabAndSideMenu(){
+
 
         setSupportActionBar(toolbar);
         //Creates the floating action button
@@ -203,28 +283,30 @@ public class MainActivity extends AppCompatActivity
         return user;
     }
 
+
+    private static Category updateCategory(AppDatabase db, Category category){
+        db.categoryDao().updateCategory(category);
+        return category;
+    }
+
+
     private static void deleteUser(AppDatabase db, User user) {
         db.userDao().delete(user);
     }
+
+    private static void deleteCategory(AppDatabase db, Category category){
+        db.categoryDao().delete(category);
+    }
+
 
     private static User addUser(final AppDatabase db, User user) {
         db.userDao().insertAll(user);
         return user;
     }
 
-    private static void populateWithTestData(AppDatabase db) {
-        User user = new User();
-        user.setFirstName("Lucas");
-        user.setLastName("Oskorep");
-        addUser(db, user);
-        user = new User();
-        user.setFirstName("Carmen");
-        user.setLastName("Bertucci");
-        addUser(db, user);
-        user = new User();
-        user.setFirstName("Student");
-        user.setLastName("McStudentFace");
-        addUser(db, user);
+    private static Category addCategory(final AppDatabase db, Category category){
+        db.categoryDao().insertAll(category);
+        return category;
     }
 
     public void Transactions() {
@@ -242,7 +324,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void setUpSpinners(){
+    public void setUpSpinners() {
         String[] spinnermonth = new String[]{
                 "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
         };
@@ -253,7 +335,7 @@ public class MainActivity extends AppCompatActivity
 
         String[] spinnerday = new String[]{
                 "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18",
-                "19", "20", "21", "22", "23", "24","25", "26", "27", "28", "29", "30", "31"
+                "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
         };
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
@@ -261,7 +343,7 @@ public class MainActivity extends AppCompatActivity
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         day.setAdapter(adapter2);
 
-        String[] spinneryear= new String[]{
+        String[] spinneryear = new String[]{
                 "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010"
         };
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
@@ -269,7 +351,7 @@ public class MainActivity extends AppCompatActivity
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         year.setAdapter(adapter3);
 
-        String[] spinnercategory= new String[]{
+        String[] spinnercategory = new String[]{
                 "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation"
         };
         ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
@@ -278,4 +360,60 @@ public class MainActivity extends AppCompatActivity
         category.setAdapter(adapter4);
 
     }
+    private static void populateWithTestData(AppDatabase db) {
+        User user = new User();
+        user.setFirstName("Lucas");
+
+      user.setLastName("Oskorep");
+        addUser(db, user);
+
+        user = new User();
+        user.setFirstName("Carmen");
+        user.setLastName("Bertucci");
+        addUser(db, user);
+
+            user = new User();
+        user.setFirstName("Student");
+        user.setLastName("McStudentFace");
+        addUser(db, user);
+    }
+
+
+    private static void populateWithTestDataCategory(AppDatabase db) {
+        Category category = new Category();
+        category.setName("Housing");
+        category.setTransactionType("negative");
+        addCategory(db, category);
+
+        category = new Category();
+        category.setName("income");
+        category.setTransactionType("positive");
+        addCategory(db, category);
+
+        category = new Category();
+        category.setName("Food");
+        category.setTransactionType("negative");
+        addCategory(db, category);
+
+        category = new Category();
+        category.setName("transportation");
+        category.setTransactionType("negative");
+        addCategory(db, category);
+    }
+
+    private static Entries addEntry(final AppDatabase db, Entries entry) {
+        db.entriesDao().insertAll(entry);
+        return entry;
+    }
+
+    private static Entries updateEntry(AppDatabase db, Entries entry){
+        db.entriesDao().updateEntries(entry);
+        return entry;
+    }
+
+    private static void deleteEntry(AppDatabase db, Entries entry){
+        db.entriesDao().delete(entry);
+    }
+
+
 }
