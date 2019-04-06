@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     int yearnum;
     String categoryval;
     String commentsval;
+    int ID = 0;
 
     private static final String TAG = "MAIN_ACTIVITY_TAG";
 
@@ -276,14 +277,23 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.new_entry) {
-            // Handle the camera action
+
         } else if (id == R.id.show_statements) {
+            //Create new activity here
+//            Intent intent = new Intent(MainActivity.this, SecondaryActivity.class);
+//            startActivity(intent);
 
         } else if (id == R.id.show_barGraph) {
+            //Create new activity here
+//            Intent intent = new Intent(MainActivity.this, SecondaryActivity.class);
+//            startActivity(intent);
+        }
 
-        } else if (id == R.id.show_pieChart) {
+        else if (id == R.id.show_pieChart) {
 
         } else if (id == R.id.show_transactionsList) {
+            Intent intent = new Intent(MainActivity.this, TransactionsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
@@ -438,7 +448,7 @@ public class MainActivity extends AppCompatActivity
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // amountnum = Integer.parseInt(amount.getText().toString());
+                amountnum = Integer.parseInt(amount.getText().toString());
                 Log.i(TAG, "trasactions here. ");
                 daynum = Integer.parseInt(day.getSelectedItem().toString());
                 Log.i(TAG, "daynum:  " + daynum);
@@ -466,7 +476,8 @@ public class MainActivity extends AppCompatActivity
                             Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Entries newentry = new Entries(daynum, monthnum, yearnum, listOfpaths.get(numOfTransactions));
+                    ID+=1;
+                    Entries newentry = new Entries(daynum, monthnum, yearnum, listOfpaths.get(numOfTransactions), ID, amountnum);
                     numOfTransactions += 1;
                     addEntry(appDatabase, newentry);
 

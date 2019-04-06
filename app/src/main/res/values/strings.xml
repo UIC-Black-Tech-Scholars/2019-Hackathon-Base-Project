@@ -7,4 +7,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="action_custom">HERE IS A CUSTOM SETTING</string>
+    <string name="transation_label">HELLO WORLD</string>
+
 </resources>

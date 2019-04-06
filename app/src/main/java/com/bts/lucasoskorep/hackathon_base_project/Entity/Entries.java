@@ -10,6 +10,9 @@ public class Entries {
     @PrimaryKey(autoGenerate = true)
     private int transPrimaryKey;
 
+    @ColumnInfo (name = "ID")
+    private int ID;
+
     @ColumnInfo(name = "nameTitle")
     private String nameTitle;
 
@@ -30,22 +33,28 @@ public class Entries {
 
     public Entries(){}
 
-    public Entries( int day, int month, int year, String path){
+    public Entries( int day, int month, int year, String path, int id, int amount){
        // this.uid = cat;
        // this.amount = amount;
         this.imagePath = path;
         this.date = month + "/" +day+ "/" + year;
+        this.ID = id;
+        this.amount = amount;
 
     }
 
 //    @ColumnInfo (name = "Images")
 //    public
 
+    public int getID(){ return this.ID; }
+    public int getAmount(){ return this.amount; }
     public String getDate(){ return this.date; }
 
     public void setDate(int day, int month, int year){
         this.date = day + "/" + month + "/" + year;
     }
+
+    public void setID(int id){this.ID = id; }
 
     public int getTransPrimaryKey() {
         return transPrimaryKey;
