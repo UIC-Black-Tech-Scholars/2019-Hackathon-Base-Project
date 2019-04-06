@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         exampleDatabaseQueryCategory();
         exampleDatabaseQueryEntries();
 
+        Log.i(TAG, "calling transactions");
         Transactions(); //get transaction info
     }
 
@@ -324,15 +325,36 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                // amountnum = Integer.parseInt(amount.getText().toString());
-                System.out.println("here");
-                daynum = (int) day.getSelectedItem();
-                monthnum = (int) month.getSelectedItem();
-                yearnum = (int) year.getSelectedItem();
+                Log.i(TAG, "trasactions here. ");
+                daynum = Integer.parseInt(day.getSelectedItem().toString());
+                Log.i(TAG, "daynum:  " + daynum);
+                String monthstr = month.getSelectedItem().toString();
+                switch(monthstr){
+                    case "January": monthnum = 1; break;
+                    case "February": monthnum = 2; break;
+                    case "March": monthnum = 3; break;
+                    case "April": monthnum = 4; break;
+                    case "May": monthnum = 5; break;
+                    case "June": monthnum = 6; break;
+                    case "July": monthnum = 7; break;
+                    case "August": monthnum = 8; break;
+                    case "September": monthnum = 9; break;
+                    case "October": monthnum = 10; break;
+                    case "November": monthnum = 11; break;
+                    case "December": monthnum = 12; break;
+                }
+                yearnum =  Integer.parseInt(year.getSelectedItem().toString());
                 categoryval = category.getSelectedItem().toString();
-                System.out.println("Here2");
+                Log.i(TAG, "transactions here 2 " + categoryval);
 
                 Entries newentry = new Entries( daynum, monthnum, yearnum);
                 addEntry(appDatabase, newentry);
+
+                Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
+                for(Entries entries: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, "Date is: " + entries.getDate());
+                    deleteEntry(appDatabase, entries);
+                }
                 //commentsval = (comments.getText().toString);
             }
         });
