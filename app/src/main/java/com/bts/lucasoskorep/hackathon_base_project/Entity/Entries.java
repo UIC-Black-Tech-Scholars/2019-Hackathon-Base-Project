@@ -25,11 +25,15 @@ public class Entries {
     @ColumnInfo (name = "Notes")
     public String notes;
 
+    @ColumnInfo (name = "Image")
+    public String imagePath;
+
     public Entries(){}
 
-    public Entries( int day, int month, int year){
+    public Entries( int day, int month, int year, String path){
        // this.uid = cat;
        // this.amount = amount;
+        this.imagePath = path;
         this.date = month + "/" +day+ "/" + year;
 
     }
@@ -58,4 +62,6 @@ public class Entries {
     public void setNameTitle(String nameTitle) {
         this.nameTitle = nameTitle;
     }
+
+    public String getImage() { return imagePath; }
 }

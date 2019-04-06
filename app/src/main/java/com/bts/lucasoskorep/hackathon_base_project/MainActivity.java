@@ -1,9 +1,12 @@
 package com.bts.lucasoskorep.hackathon_base_project;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -26,11 +29,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.Entries;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +57,9 @@ public class MainActivity extends AppCompatActivity
 
     private static final int CAMERA_CODE = 1;
     private static final int PERMISSION_EXTERNAL_STORAGE = 2;
+
+    private ArrayList<String> listOfpaths = new ArrayList<>();
+    private Integer numOfTransactions = 0;
 
     private static AppDatabase appDatabase;
 
@@ -143,21 +154,60 @@ public class MainActivity extends AppCompatActivity
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG, "Permission is granted");
+
+
                 MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, "fds", "Fsd");
+
+                // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                Uri tempUri = getImageUri(getApplicationContext(), imageBitmap);
+
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                File finalFile = new File(getRealPathFromURI(tempUri));
+                listOfpaths.add(finalFile.toString());
+                Log.v(TAG, "Permission is granted " + finalFile);
             } else {
-                Log.v(TAG, "Permission  not is granted");
+                Log.v(TAG, "Permission  not is granted " );
                 ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE);
 
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                         PackageManager.PERMISSION_GRANTED) {
-                    Log.v(TAG, "Permission is granted");
+
                     MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, "fds", "Fsd");
+
+                    // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                    Uri tempUri = getImageUri(getApplicationContext(), imageBitmap);
+
+                    // CALL THIS METHOD TO GET THE ACTUAL PATH
+                    File finalFile = new File(getRealPathFromURI(tempUri));
+                    listOfpaths.add(finalFile.toString());
+                    Log.v(TAG, "Permission is granted " + finalFile);
                 }
             }
 
         }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+
+    public String getRealPathFromURI(Uri uri) {
+        String path = "";
+        if (getContentResolver() != null) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = cursor.getString(idx);
+                cursor.close();
+            }
+        }
+        return path;
     }
 
     /**
@@ -408,14 +458,23 @@ public class MainActivity extends AppCompatActivity
                 categoryval = category.getSelectedItem().toString();
                 Log.i(TAG, "transactions here 2 " + categoryval);
 
-                Entries newentry = new Entries( daynum, monthnum, yearnum);
-                addEntry(appDatabase, newentry);
-
-                Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
-                for(Entries entries: appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, "Date is: " + entries.getDate());
-                    deleteEntry(appDatabase, entries);
+                if (listOfpaths.size() <= numOfTransactions || listOfpaths.get(numOfTransactions) == null){
+                    Toast.makeText(MainActivity.this, "Please Add An Image :)",
+                            Toast.LENGTH_LONG).show();
                 }
+                else {
+                    Entries newentry = new Entries(daynum, monthnum, yearnum, listOfpaths.get(numOfTransactions));
+                    numOfTransactions += 1;
+                    addEntry(appDatabase, newentry);
+
+                    Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
+                    for(Entries entries: appDatabase.entriesDao().getAll()){
+                        Log.i(TAG, "Date is: " + entries.getDate() + " PATH: " + entries.getImage());
+                        deleteEntry(appDatabase, entries);
+                    }
+                }
+
+
                 //commentsval = (comments.getText().toString);
             }
         });
