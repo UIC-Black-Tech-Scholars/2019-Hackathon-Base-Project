@@ -521,7 +521,7 @@ public class MainActivity extends AppCompatActivity
         year.setAdapter(adapter3);
 
         String[] spinnercategory = new String[]{
-                "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation"
+                "Income", "Housing", "Food", "Clothing", "Entertainment", "Transportation", "Other"
         };
         ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spinnercategory);
