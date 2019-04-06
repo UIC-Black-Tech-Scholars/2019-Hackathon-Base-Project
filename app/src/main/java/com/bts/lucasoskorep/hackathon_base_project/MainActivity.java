@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.editText)
     EditText amount;
 
+
     @BindView(R.id.spinner5)
     Spinner month;
 
@@ -167,6 +168,7 @@ public class MainActivity extends AppCompatActivity
                 File finalFile = new File(getRealPathFromURI(tempUri));
                 listOfpaths.add(finalFile.toString());
                 Log.v(TAG, "Permission is granted " + finalFile);
+                numOfTransactions +=1;
             } else {
                 Log.v(TAG, "Permission  not is granted " );
                 ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity
                     File finalFile = new File(getRealPathFromURI(tempUri));
                     listOfpaths.add(finalFile.toString());
                     Log.v(TAG, "Permission is granted " + finalFile);
+                    numOfTransactions += 1;
                 }
             }
 
@@ -478,7 +481,9 @@ public class MainActivity extends AppCompatActivity
                 }
                 else {
                     ID+=1;
+
                     Entries newentry = new Entries(daynum, monthnum, yearnum, listOfpaths.get(numOfTransactions), ID, amountnum, categoryval);
+                    addEntry(appDatabase, newentry);
 
                     Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
                     for(Entries entries: appDatabase.entriesDao().getAll()){
@@ -486,7 +491,6 @@ public class MainActivity extends AppCompatActivity
                         deleteEntry(appDatabase, entries);
                     }
                 }
-
 
                 //commentsval = (comments.getText().toString);
             }
@@ -548,6 +552,10 @@ public class MainActivity extends AppCompatActivity
         addUser(db, user);
     }
 
+    public void openGraphActivity(){
+        Intent intent = new Intent(MainActivity.this, GraphActivity.class);
+        startActivity(intent);
+    }
 
     private static void populateWithTestDataCategory(AppDatabase db) {
         Category category = new Category();
