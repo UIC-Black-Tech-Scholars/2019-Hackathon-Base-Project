@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int amountnum = Integer.parseInt(amount.getText().toString());
+                //int amountnum = Integer.parseInt(amount.getText());
                 //int daynum = (int) day.getSelectedItem();
                 //int monthnum = (int) month.getSelectedItem();
                // int yearnum = (int) year.getSelectedItem();
