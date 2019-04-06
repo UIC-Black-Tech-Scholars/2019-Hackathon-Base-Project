@@ -477,9 +477,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else {
                     ID+=1;
-                    Entries newentry = new Entries(daynum, monthnum, yearnum, listOfpaths.get(numOfTransactions), ID, amountnum);
-                    numOfTransactions += 1;
-                    addEntry(appDatabase, newentry);
+                    Entries newentry = new Entries(daynum, monthnum, yearnum, listOfpaths.get(numOfTransactions), ID, amountnum, categoryval);
 
                     Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
                     for(Entries entries: appDatabase.entriesDao().getAll()){

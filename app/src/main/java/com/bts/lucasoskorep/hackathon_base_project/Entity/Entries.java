@@ -33,13 +33,14 @@ public class Entries {
 
     public Entries(){}
 
-    public Entries( int day, int month, int year, String path, int id, int amount){
+    public Entries( int day, int month, int year, String path, int id, int amount, String cat){
        // this.uid = cat;
        // this.amount = amount;
         this.imagePath = path;
         this.date = month + "/" +day+ "/" + year;
         this.ID = id;
         this.amount = amount;
+        this.uid = cat;
 
     }
 
