@@ -80,6 +80,10 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.spinner4)
     Spinner category;
 
+    @BindView(R.id.editText5){
+        EditText comments;
+    }
+
 
 
 
@@ -313,12 +317,12 @@ public class MainActivity extends AppCompatActivity
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //int amountnum = Integer.parseInt(amount.getText());
-                //int daynum = (int) day.getSelectedItem();
-                //int monthnum = (int) month.getSelectedItem();
-               // int yearnum = (int) year.getSelectedItem();
-               // String categoryval = String.valueOf(category.getSelectedItem());
-               // System.out.println("Amount num: " + amountnum);
+                int amountnum = Integer.parseInt(amount.getText().toString());
+                int daynum = (int) day.getSelectedItem();
+                int monthnum = (int) month.getSelectedItem();
+                int yearnum = (int) year.getSelectedItem();
+                String categoryval = String.valueOf(category.getSelectedItem());
+              //  String commentsval = String.valueOf(comments.getText().toString);
             }
         });
 
