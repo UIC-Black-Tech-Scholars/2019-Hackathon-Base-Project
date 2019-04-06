@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.show_statements) {
 
-        } else if (id == R.id.show_reports) {
+//        } else if (id == R.id.show_reports) {
 
         } else if (id == R.id.nav_manage) {
 

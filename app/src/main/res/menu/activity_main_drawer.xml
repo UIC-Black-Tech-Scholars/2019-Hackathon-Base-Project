@@ -13,9 +13,15 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Statements" />
         <item
-            android:id="@+id/show_reports"
+            android:id="@+id/show_pieChart"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Reports" />
+            android:title="Pie Chart" />
+
+        <item
+            android:id="@+id/show_barGraph"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Bar Graph" />
+
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
