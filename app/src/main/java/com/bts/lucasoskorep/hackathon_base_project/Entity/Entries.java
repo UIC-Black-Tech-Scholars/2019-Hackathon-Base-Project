@@ -28,8 +28,7 @@ public class Entries {
 //    @ColumnInfo (name = "Images")
 //    public
 
-    @ColumnInfo(name = "Category")
-    public int catPrimaryKey;
+
 
     public int getTransPrimaryKey() {
         return transPrimaryKey;
@@ -45,13 +44,5 @@ public class Entries {
 
     public void setNameTitle(String nameTitle) {
         this.nameTitle = nameTitle;
-    }
-
-    public int getCatPrimaryKey() {
-        return catPrimaryKey;
-    }
-
-    public void setCatPrimaryKey (int catPrimaryKey) {
-        this.catPrimaryKey = catPrimaryKey;
     }
 }

@@ -2,14 +2,6 @@ package com.bts.lucasoskorep.hackathon_base_project;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.TextViewCompat;
-import android.util.Log;
-import android.view.View;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -20,16 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
-
-import android.view.View;
-import android.widget.TextView;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
@@ -80,9 +67,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.spinner4)
     Spinner category;
 
-    @BindView(R.id.editText5){
+    @BindView(R.id.editText5)
         EditText comments;
-    }
+
 
 
 
