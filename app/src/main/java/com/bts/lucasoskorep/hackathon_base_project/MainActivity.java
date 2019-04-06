@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.editText)
     EditText amount;
 
-
     @BindView(R.id.spinner5)
     Spinner month;
 
@@ -90,8 +89,10 @@ public class MainActivity extends AppCompatActivity
     Spinner category;
 
     @BindView(R.id.editText5)
-        EditText comments;
+    EditText comments;
 
+    @BindView(R.id.editText7)
+    EditText nameTitle;
 
 
     private Button imageButton;
