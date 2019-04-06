@@ -1,7 +1,10 @@
 package com.bts.lucasoskorep.hackathon_base_project;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,6 +37,17 @@ public class TransactionsActivity extends AppCompatActivity {
 
         transactionsarray = new ArrayList<String>();
 
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(TransactionsActivity.this, MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
         setup();
         populate();
 
@@ -55,6 +69,9 @@ public class TransactionsActivity extends AppCompatActivity {
             transactionsarray.add("ID: " + entry.getID() + " - " + entry.getAmount());
             adapter.notifyDataSetChanged();
         }
+
+        transactionsarray.add("Test string");
+        adapter.notifyDataSetChanged();
 
     }
 }
