@@ -1,34 +1,26 @@
 package com.bts.lucasoskorep.hackathon_base_project;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
+import com.bts.lucasoskorep.hackathon_base_project.Entity.Entries;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,6 +75,8 @@ public class MainActivity extends AppCompatActivity
 
         //Start with your onCreate code here!
         exampleDatabaseQueryCategory();
+
+        exampleDatabaseQuery2();
 
     }
 
@@ -222,6 +216,37 @@ public class MainActivity extends AppCompatActivity
         new Thread(runnable).start();
     }
 
+// Method of the EntriesData
+
+    private void exampleDatabaseQuery2(){
+        //database code here
+        appDatabase = AppDatabase.getAppDatabase(this);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                populateWithTestData(appDatabase);
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
+                    updateEntry(appDatabase, entry);
+                }
+
+                Log.i(TAG, "Done updating the entries, printing out the update results.");
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
+                    deleteEntry(appDatabase, entry);
+                }
+                Log.i(TAG, "Removing all entries from the database. ");
+                Log.i(TAG, "Attempting to print all entries from the database. There should be no more log messages after this. ");
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle());
+
+                }
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+
     public void setUpFabAndSideMenu(){
 
         setSupportActionBar(toolbar);
@@ -273,23 +298,23 @@ public class MainActivity extends AppCompatActivity
         return category;
     }
 
-//    private static void populateWithTestData(AppDatabase db) {
-//        User user = new User();
-//        user.setFirstName("Lucas");
-//        user.setLastName("Oskorep");
-//        addUser(db, user);
+    private static void populateWithTestData(AppDatabase db) {
+        User user = new User();
+        user.setFirstName("Lucas");
 
-//        user = new User();
-//        user.setFirstName("Carmen");
-//        user.setLastName("Bertucci");
-//        addUser(db, user);
+      user.setLastName("Oskorep");
+        addUser(db, user);
 
-//        user = new User();
-//        user.setFirstName("Student");
-//        user.setLastName("McStudentFace");
-//        addUser(db, user);
-//    }
+        user = new User();
+        user.setFirstName("Carmen");
+        user.setLastName("Bertucci");
+        addUser(db, user);
 
+            user = new User();
+        user.setFirstName("Student");
+        user.setLastName("McStudentFace");
+        addUser(db, user);
+    }
     private static void populateWithTestDataCategory(AppDatabase db) {
         Category category = new Category();
         category.setName("Housing");
@@ -311,4 +336,20 @@ public class MainActivity extends AppCompatActivity
         category.setTransactionType("negative");
         addCategory(db, category);
     }
+
+    private static Entries addEntry(final AppDatabase db, Entries entry) {
+        db.entriesDao().insertAll(entry);
+        return entry;
+    }
+
+    private static Entries updateEntry(AppDatabase db, Entries entry){
+        db.entriesDao().updateEntries(entry);
+        return entry;
+    }
+
+    private static void deleteEntry(AppDatabase db, Entries entry){
+        db.entriesDao().delete(entry);
+    }
+
+
 }
