@@ -30,7 +30,7 @@ public class Entries {
     public Entries( int day, int month, int year){
        // this.uid = cat;
        // this.amount = amount;
-        this.date = day + "/" + month + "/" + year;
+        this.date = month + "/" +day+ "/" + year;
 
     }
 

@@ -3,15 +3,10 @@ package com.bts.lucasoskorep.hackathon_base_project;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -75,8 +70,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.button2)
     Button submitbutton;
 
-    @BindView(R.id.editText7)
+    @BindView(R.id.editText)
     EditText amount;
+
 
     @BindView(R.id.spinner5)
     Spinner month;
@@ -95,6 +91,8 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.editText5)
         EditText comments;
+
+
 
     private Button imageButton;
 
