@@ -1,9 +1,22 @@
 package com.bts.lucasoskorep.hackathon_base_project;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +29,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.bts.lucasoskorep.hackathon_base_project.Database.AppDatabase;
@@ -37,6 +51,9 @@ public class MainActivity extends AppCompatActivity
     String commentsval;
 
     private static final String TAG = "MAIN_ACTIVITY_TAG";
+
+    private static final int CAMERA_CODE = 1;
+    private static final int PERMISSION_EXTERNAL_STORAGE = 2;
 
     private static AppDatabase appDatabase;
 
@@ -70,12 +87,16 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.spinner8)
     Spinner year;
 
+    @BindView(R.id.imageView2)
+    ImageView cameraImage;
+
     @BindView(R.id.spinner4)
     Spinner category;
 
     @BindView(R.id.editText5)
         EditText comments;
 
+    private Button imageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +104,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setUpFabAndSideMenu();
+
+        imageButton = findViewById(R.id.button);
+        cameraImage = findViewById(R.id.imageView2);
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, CAMERA_CODE);
+                }
+
+            }
+        });
 
         //Start with your onCreate code here!
 
@@ -97,6 +132,35 @@ public class MainActivity extends AppCompatActivity
         Transactions(); //get transaction info
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
+
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            cameraImage.setImageBitmap(imageBitmap);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, "fds", "Fsd");
+            } else {
+                Log.v(TAG, "Permission  not is granted");
+                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE);
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    Log.v(TAG, "Permission is granted");
+                    MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, "fds", "Fsd");
+                }
+            }
+
+        }
+    }
 
     /**
      * Triggered whenever the back button is pressed.
@@ -241,28 +305,27 @@ public class MainActivity extends AppCompatActivity
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                populateWithTestDataEntries(  appDatabase);
-                for(Entries entries : appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, entries.getDate());
-                    updateEntry(appDatabase, entries);
+                populateWithTestData(appDatabase);
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
+                    updateEntry(appDatabase, entry);
                 }
 
-                Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
-                for(Entries entries: appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, "Date is: " + entries.getDate());
-                    deleteEntry(appDatabase, entries);
+                Log.i(TAG, "Done updating the entries, printing out the update results.");
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
+                    deleteEntry(appDatabase, entry);
                 }
-                Log.i(TAG, "Removing all users from the database. ");
-                Log.i(TAG, "Entries - Attempting to print all users from the database. There should be no more log messages after this. ");
-                for(Entries entries: appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, entries.getDate());
+                Log.i(TAG, "Removing all entries from the database. ");
+                Log.i(TAG, "Attempting to print all entries from the database. There should be no more log messages after this. ");
+                for(Entries entry: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entry.getNameTitle());
 
                 }
             }
         };
         new Thread(runnable).start();
     }
-
 
 
     public void setUpFabAndSideMenu(){
