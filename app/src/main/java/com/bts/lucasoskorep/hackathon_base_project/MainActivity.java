@@ -29,6 +29,12 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    int amountnum;
+    int daynum;
+    int monthnum;
+    int yearnum;
+    String categoryval;
+    String commentsval;
 
     private static final String TAG = "MAIN_ACTIVITY_TAG";
 
@@ -71,9 +77,6 @@ public class MainActivity extends AppCompatActivity
         EditText comments;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,17 +85,15 @@ public class MainActivity extends AppCompatActivity
         setUpFabAndSideMenu();
 
         //Start with your onCreate code here!
+
+        setUpSpinners();
+
         exampleDatabaseQuery();
 
         exampleDatabaseQueryCategory();
         exampleDatabaseQueryEntries();
 
-
-
-        setUpSpinners();
-
         Transactions(); //get transaction info
-
     }
 
 
@@ -212,36 +213,34 @@ public class MainActivity extends AppCompatActivity
         new Thread(runnable).start();
     }
 
-
-// Method of the EntriesData
-
     private void exampleDatabaseQueryEntries(){
         //database code here
         appDatabase = AppDatabase.getAppDatabase(this);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                populateWithTestData(appDatabase);
-                for(Entries entry: appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
-                    updateEntry(appDatabase, entry);
+                populateWithTestDataEntries(  appDatabase);
+                for(Entries entries : appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entries.getDate());
+                    updateEntry(appDatabase, entries);
                 }
 
-                Log.i(TAG, "Done updating the entries, printing out the update results.");
-                for(Entries entry: appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, entry.getNameTitle() + entry.getTransPrimaryKey());
-                    deleteEntry(appDatabase, entry);
+                Log.i(TAG, "Entries - Done updating the users, printing out the update results.");
+                for(Entries entries: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, "Date is: " + entries.getDate());
+                    deleteEntry(appDatabase, entries);
                 }
-                Log.i(TAG, "Removing all entries from the database. ");
-                Log.i(TAG, "Attempting to print all entries from the database. There should be no more log messages after this. ");
-                for(Entries entry: appDatabase.entriesDao().getAll()){
-                    Log.i(TAG, entry.getNameTitle());
+                Log.i(TAG, "Removing all users from the database. ");
+                Log.i(TAG, "Entries - Attempting to print all users from the database. There should be no more log messages after this. ");
+                for(Entries entries: appDatabase.entriesDao().getAll()){
+                    Log.i(TAG, entries.getDate());
 
                 }
             }
         };
         new Thread(runnable).start();
     }
+
 
 
     public void setUpFabAndSideMenu(){
@@ -303,12 +302,17 @@ public class MainActivity extends AppCompatActivity
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int amountnum = Integer.parseInt(amount.getText().toString());
-                int daynum = (int) day.getSelectedItem();
-                int monthnum = (int) month.getSelectedItem();
-                int yearnum = (int) year.getSelectedItem();
-                String categoryval = String.valueOf(category.getSelectedItem());
-              //  String commentsval = String.valueOf(comments.getText().toString);
+               // amountnum = Integer.parseInt(amount.getText().toString());
+                System.out.println("here");
+                daynum = (int) day.getSelectedItem();
+                monthnum = (int) month.getSelectedItem();
+                yearnum = (int) year.getSelectedItem();
+                categoryval = category.getSelectedItem().toString();
+                System.out.println("Here2");
+
+                Entries newentry = new Entries( daynum, monthnum, yearnum);
+                addEntry(appDatabase, newentry);
+                //commentsval = (comments.getText().toString);
             }
         });
 
@@ -393,7 +397,9 @@ public class MainActivity extends AppCompatActivity
 
     private static void populateWithTestDataEntries(AppDatabase db) {
         Entries entry = new Entries();
-        entry.setNameTitle("trip to jewel osco");
+        entry.setDate(1, 2, 20);
+        addEntry(db, entry);
+
     }
 
     private static Entries addEntry(final AppDatabase db, Entries entry) {

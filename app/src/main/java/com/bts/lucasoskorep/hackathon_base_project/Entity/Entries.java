@@ -14,21 +14,34 @@ public class Entries {
     private String nameTitle;
 
     @ColumnInfo(name = "Category")
-    public int uid;
+    public String uid;
 
     @ColumnInfo(name = "Amount")
     public int amount;
 
     @ColumnInfo (name = "Date")
-    public int date;
+    public String date;
 
     @ColumnInfo (name = "Notes")
     public String notes;
 
+    public Entries(){}
+
+    public Entries( int day, int month, int year){
+       // this.uid = cat;
+       // this.amount = amount;
+        this.date = day + "/" + month + "/" + year;
+
+    }
+
 //    @ColumnInfo (name = "Images")
 //    public
 
+    public String getDate(){ return this.date; }
 
+    public void setDate(int day, int month, int year){
+        this.date = day + "/" + month + "/" + year;
+    }
 
     public int getTransPrimaryKey() {
         return transPrimaryKey;

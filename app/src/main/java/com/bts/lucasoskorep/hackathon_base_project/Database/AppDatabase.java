@@ -7,13 +7,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.bts.lucasoskorep.hackathon_base_project.DAO.CategoryDAO;
-import com.bts.lucasoskorep.hackathon_base_project.DAO.UserDao;
-import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
-import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
-
-
 import com.bts.lucasoskorep.hackathon_base_project.DAO.EntriesDao;
 import com.bts.lucasoskorep.hackathon_base_project.DAO.UserDao;
+import com.bts.lucasoskorep.hackathon_base_project.Entity.Category;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.Entries;
 import com.bts.lucasoskorep.hackathon_base_project.Entity.User;
 
@@ -30,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE =
-                    Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "test2-database")
+                    Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "test3-database")
                             // allow queries on the main thread.
                             // Don't do this on a real app! See PersistenceBasicSample for an example.
                             .allowMainThreadQueries()
