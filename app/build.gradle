@@ -41,4 +41,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
+    //graph
+    implementation 'com.jjoe64:graphview:4.0.0'
+
 }
